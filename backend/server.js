@@ -2,10 +2,16 @@
 
 import express from "express";
 import mongoose from "mongoose";
-import data from "./data.js";
+import dotenv from "dotenv";
 import userRouter from "./routers/userRouter.js";
+import productRouter from "./routers/productRouter.js";
+
+dotenv.config();
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // eslint-disable-next-line no-undef
 mongoose.connect(
   // eslint-disable-next-line no-undef
@@ -24,20 +30,8 @@ mongoose.connection.on("connected", (err, res) => {
   console.log("mongoose is connected");
 });
 
-app.get("/api/products", (req, res) => {
-  res.send(data.products);
-});
-
-app.get("/api/products/:id", (req, res) => {
-  const product = data.products.find((x) => x._id === req.params.id);
-  if (product) {
-    res.send(product);
-  } else {
-    res.status(404).send({ message: "Product Not Found" });
-  }
-});
-
 app.use("/api/users", userRouter);
+app.use("/api/products", productRouter);
 app.get("/", (req, res) => {
   res.send("Server is ready");
 });
