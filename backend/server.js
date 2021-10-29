@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRouter from "./routers/userRouter.js";
 import productRouter from "./routers/productRouter.js";
+import orderRouter from "./routers/orderRouter.js";
 
 dotenv.config();
 
@@ -32,6 +33,11 @@ mongoose.connection.on("connected", (err, res) => {
 
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
+app.use("/api/orders", orderRouter);
+app.get("/api/config/paypal", (req, res) => {
+  // eslint-disable-next-line no-undef
+  res.send(process.env.PAYPAL_CLIENT_ID || "sb");
+});
 app.get("/", (req, res) => {
   res.send("Server is ready");
 });
